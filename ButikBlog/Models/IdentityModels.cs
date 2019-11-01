@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -16,6 +17,8 @@ namespace ButikBlog.Models
             // Add custom user claims here
             return userIdentity;
         }
+        public virtual ICollection<Post> Posts { get; set; } //her yazarın yazıları vardır
+
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -29,5 +32,10 @@ namespace ButikBlog.Models
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Post> Posts { get; set; }
+
     }
 }
