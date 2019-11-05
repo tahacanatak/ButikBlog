@@ -25,7 +25,7 @@ namespace ButikBlog
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/fontawesome.css",
+                      "~/Content/fontawesome-all.css",
                       "~/Content/Site.css"));
 
                 #if DEBUG

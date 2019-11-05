@@ -29,7 +29,8 @@
                     <a class="text-muted" href="#">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img" viewBox="0 0 24 24" focusable="false"><title>Ara</title><circle cx="10.5" cy="10.5" r="7.5" /><path d="M21 21l-5.2-5.2" /></svg>
                     </a>
-                    <a class="btn btn-sm btn-outline-secondary" href="#">Kayıt Ol</a>
+                
+                    @Html.Partial("_LoginPartial")
                 </div>
             </div>
         </header>
@@ -43,6 +44,7 @@
             </nav>
         </div>
 
+        <!-- #region Su an icin gereksiz -->
         @*<div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
             <div class="col-md-6 px-0">
                 <h1 class="display-4 font-italic">Title of a longer featured blog post</h1>
@@ -81,6 +83,9 @@
                 </div>
             </div>
         </div>*@
+        <!-- #endregion -->
+
+
     </div>
 
     <main role="main" class="container">
@@ -102,9 +107,9 @@
                     <div class="p-4">
                         <h4 class="font-italic">Elsewhere</h4>
                         <ol class="list-unstyled">
-                            <li><a href="#">GitHub</a></li>
-                            <li><a href="#">Twitter</a></li>
-                            <li><a href="#">Facebook</a></li>
+                            <li><a href="#"><i class="fab fa-github"></i> GitHub</a></li>
+                            <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                            <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
                         </ol>
                     </div>
                 </aside><!-- /.blog-sidebar -->
