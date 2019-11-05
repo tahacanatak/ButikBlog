@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace ButikBlog.Areas.Admin.Controllers
 {
-    public class DashboardController : AdminBaseController
+    public class PostsController : Controller
     {
-        // GET: Admin/Dashboard
+        // GET: Admin/Posts
         public ActionResult Index()
         {
             return View();
