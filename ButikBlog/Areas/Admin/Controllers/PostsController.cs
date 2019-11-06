@@ -6,12 +6,12 @@ using System.Web.Mvc;
 
 namespace ButikBlog.Areas.Admin.Controllers
 {
-    public class PostsController : Controller
+    public class PostsController : AdminBaseController
     {
         // GET: Admin/Posts
         public ActionResult Index()
         {
-            return View();
+            return View(db.Posts.ToList());
         }
     }
 }
