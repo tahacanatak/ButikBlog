@@ -5,7 +5,7 @@
 }
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Aktif Yazılar</h3>
+        <h3 class="card-title font-italic">Yazılarınızı buradan yönetebilirsiniz.</h3>
     </div>
     <!-- /.card-header -->
     <div class="card-body">
@@ -23,15 +23,19 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    <tr data-post-id="@item.Id"> @*ajax ile yenilemek için*@
+
                         <td>@item.Id</td>
                         <td>@item.Title</td>
                         <td>@item.Category.CategoryName</td>
                         <td>@item.Author.UserName</td>
                         <td>@item.CreationTime</td>
                         <td>
-                            <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i> Sil</a>
-                            <a href="#" class="btn btn-info"><i class="fas fa-edit"></i> Düzenle</a>
+                            <a href="#" class="btn btn-outline-danger" data-toggle="modal" data-target="#silModal" data-post-title="@item.Title" data-post-id="@item.Id">
+                                <i class="fas fa-trash"></i>
+                                Sil
+                            </a>
+                            <a href="@Url.Action("Edit", "Posts", new { id = item.Id})" class="btn btn-outline-info"><i class="fas fa-edit"></i> Düzenle</a>
                         </td>
                     </tr>
                 }
@@ -49,11 +53,35 @@
         </table>
     </div>
     <!-- /.card-body -->
+    <!-- Sil Modal -->
+    <!-- data-post-id data-post-title kavramları -->
+
+    <div class="modal fade" id="silModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Silme Onayı <i class="fas fa-exclamation"></i> </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="modalPostId" />
+                    "<span id="modalPostTitle">Falanca</span>" başlıklı yazısını silmek istediğinize emin misiniz?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Vazgeç</button>
+                    <button type="button" class="btn btn-primary" id="modalButtonDelete">Sil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @section scripts{
     <script>
             $(function () {
-                $("#example1").DataTable({
+                var table = $("#example1").DataTable({
                     language: {
                         url: "@Url.Content("~/Areas/Admin/plugins/datatables/Turkish.json")"
                     }
@@ -67,6 +95,42 @@
                     "info": true,
                     "autoWidth": true,
                 });
-            });
+
+                //sil modalı gözükürken tetiklenen event
+
+                $("#silModal").on("show.bs.modal", function (event) {
+                    var btnSil = $(event.relatedTarget);
+                    var modal = $(this); // modal alındı
+
+                    $("#modalPostId").val(btnSil.data("post-id")); // sil butonunun data post-id ne git
+                    $("#modalPostTitle").text(btnSil.data("post-title")); // metin koyacaksan text,html gireceksen val
+                });
+
+                $("#modalButtonDelete").click(function () {
+                    var id = $("#modalPostId").val();
+
+                    $.ajax({
+                        url: "@Url.Action("Delete", "Posts")",
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+
+                            //tablodan ilgili satırı kaldır
+                            //trlerden data-post-idsi silinecek id olanı al
+                            var tr = $("tr[data-post-id = " + id + "]");
+
+                            //tablodan tryi içeren satırı sil ve tekrar güncelle(ciz)
+                            table.row(tr).remove().draw(false);
+
+                            //modalı gizle
+                            $("#silModal").modal("hide");
+
+
+                        }
+                    });
+                });
+        });
+
+
     </script>
 }

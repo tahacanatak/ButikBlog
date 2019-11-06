@@ -10,7 +10,7 @@ namespace ButikBlog.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminBaseController : Controller
     {
-        // yalnızca admin girebilir miras alınınca bu da gidecek
+        // yalnızca admin girebilir miras alınınca bu role de gidecek
         protected ApplicationDbContext db = new ApplicationDbContext();
 
         protected override void Dispose(bool disposing)
