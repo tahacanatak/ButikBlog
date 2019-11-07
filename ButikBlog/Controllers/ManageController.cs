@@ -363,6 +363,17 @@ namespace ButikBlog.Controllers
                 var saveFileName = Guid.NewGuid() + ext; // benzersiz ad
                 var saveFilePath = Path.Combine(saveFolderPath, saveFileName); // tam dosya ismi
 
+
+                #region Eski dosyayi sil(varsa)
+
+                string deleteFilePAth = null;
+                if (!string.IsNullOrEmpty(user.Photo))
+                {
+                    deleteFilePAth = Path.Combine(saveFolderPath, user.Photo);
+                    System.IO.File.Delete(deleteFilePAth);
+                } 
+                #endregion
+
                 vm.File.SaveAs(saveFilePath);
                 user.Photo = saveFileName;
                 db.SaveChanges();
