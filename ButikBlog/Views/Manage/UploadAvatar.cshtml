@@ -22,7 +22,8 @@ else
 
     <div class="form-group mt-2">
         <label for="File">Bir fotoğraf seçiniz</label>
-        <input type="file" class="form-control-file" id="File" name="File">
+        <input type="file" class="form-control-file" id="File" name="File" accept="image/*">
+        @Html.ValidationMessageFor(x => x.File, null, new { @class = "text-danger" })
     </div>
 
     <a href="@Url.Action("Index", "Manage")" class="btn btn-secondary">İptal</a>
