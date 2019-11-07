@@ -7,11 +7,13 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ButikBlog.Models;
+using ButikBlog.ViewModels;
+using System.IO;
 
 namespace ButikBlog.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -64,13 +66,18 @@ namespace ButikBlog.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+
+            //kullaniciyi alindi
+            var user = UserManager.FindById(userId);
+
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                Photo = user.Photo
             };
             return View(model);
         }
@@ -333,7 +340,40 @@ namespace ButikBlog.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        public ActionResult UploadAvatar()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            var vm = new UploadAvatarViewModel
+            {
+                Photo = user.Photo
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UploadAvatar(UploadAvatarViewModel vm)
+        {
+                var user = db.Users.Find(User.Identity.GetUserId());
+
+            if (ModelState.IsValid)
+            {
+                var saveFolderPath = Server.MapPath("~/Upload/Profiles");
+                var ext = Path.GetExtension(vm.File.FileName); // dosya uzantısı alındı
+                var saveFileName = Guid.NewGuid() + ext; // benzersiz ad
+                var saveFilePath = Path.Combine(saveFolderPath, saveFileName); // tam dosya ismi
+
+                vm.File.SaveAs(saveFilePath);
+                user.Photo = saveFileName;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+           
+            vm.Photo = user.Photo;
+            return View(vm);
+        }
+
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 

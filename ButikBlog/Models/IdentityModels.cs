@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Security.Claims;
@@ -21,6 +22,8 @@ namespace ButikBlog.Models
             return userIdentity;
         }
 
+        [StringLength(100)]
+        public string Photo { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; } //her yazarın yazıları vardır
 

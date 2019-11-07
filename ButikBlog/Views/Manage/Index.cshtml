@@ -1,25 +1,42 @@
 ﻿@model ButikBlog.Models.IndexViewModel
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "Hesabım";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Change your account settings</h4>
+    <h4>Hesap ayarlarını değiştir</h4>
     <hr />
+
+    @*viewmodeline photo alanı ekledik*@
+    <div class="mb-1">
+        @if (string.IsNullOrEmpty(Model.Photo))
+        {
+            <img src="~/Images/avatar.png" class="img-thumbnail" style="height:150px;" />
+        }
+        else
+        {
+            <img src="~/Upload/Profiles/@Model.Photo" height="150"  class="img-thumbnail" style="height:150px;"/>
+
+        }
+        <br/>
+            <a href="@Url.Action("UploadAvatar", "Manage")">Resmi Güncelle</a>
+    </div>
+
+
     <dl class="dl-horizontal">
-        <dt>Password:</dt>
+        <dt>Parola:</dt>
         <dd>
             [
             @if (Model.HasPassword)
             {
-                @Html.ActionLink("Change your password", "ChangePassword")
+                @Html.ActionLink("Parola değiştir", "ChangePassword")
             }
             else
             {
-                @Html.ActionLink("Create", "SetPassword")
+                @Html.ActionLink("Oluştur", "SetPassword")
             }
             ]
         </dd>

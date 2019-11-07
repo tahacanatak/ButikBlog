@@ -1,0 +1,30 @@
+﻿@model UploadAvatarViewModel
+@{
+    /**/
+
+    ViewBag.Title = "UploadAvatar";
+}
+
+<h2>Profil Resmi</h2>
+
+@if (string.IsNullOrEmpty(Model.Photo))
+{
+    <img src="~/Images/avatar.png" height="150" class="rounded img-thumbnail" style="height:150px;" />
+}
+else
+{
+    <img src="~/Upload/Profiles/@Model.Photo" height="150" class="rounded img-thumbnail" style="height:150px;" />
+}
+
+@using (Html.BeginForm("UploadAvatar", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group mt-2">
+        <label for="File">Bir fotoğraf seçiniz</label>
+        <input type="file" class="form-control-file" id="File" name="File">
+    </div>
+
+    <a href="@Url.Action("Index", "Manage")" class="btn btn-secondary">İptal</a>
+    <button href="" class="btn btn-primary">Gönder</button>
+}
