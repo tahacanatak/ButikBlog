@@ -1,19 +1,20 @@
 ﻿@model PostEditViewModel
 @{
-    ViewBag.Title = "Yazıyı Düzenle";
-    ViewBag.HeaderTitle = "Yazıyı Düzenle";
+    var isNew = Model.Id == 0;
+
+
+    ViewBag.Title = isNew ? "Yeni Yazı" : "Yazıyı Düzenle";
+    ViewBag.HeaderTitle = isNew ? "Yeni Yazı" : "Yazıyı Düzenle";
+
 }
 
-@using (Html.BeginForm("Edit", "Posts", FormMethod.Post))
+@using (Html.BeginForm(isNew ? "New" : "Edit", "Posts", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.Id)
 
     <div class="card card-primary card-outline">
-        @*<div class="card-header">
-                <h3 class="card-title">Compose New Message</h3>
-            </div>*@
-        <!-- /.card-header -->
+       
         <div class="card-body">
             <div class="row">
                 <div class="col-md-9">
@@ -32,7 +33,7 @@
             </div>
 
             <div class="form-group">
-                @Html.TextAreaFor(x => x.Content, new { @class = "form-control", placeholder = "Bir şeyler yazınız", style = "height: 300px" })
+                @Html.TextAreaFor(x => x.Content, new { @class = "form-control"})
                 @Html.ValidationMessageFor(x => x.Content, null, new { @class = "text-danger" })
             </div>
         </div>
@@ -51,11 +52,12 @@
 }
 
 @section  scripts {
-
     <script>
         $(function () {
             $("#Content").summernote({
-                lang:"tr-TR"
+                lang: "tr-TR",
+                height: 300,
+                placeholder : "İçeriği giriniz.."
             });
         });
     </script>

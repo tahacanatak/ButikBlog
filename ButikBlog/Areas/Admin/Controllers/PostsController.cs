@@ -1,5 +1,6 @@
 ﻿using ButikBlog.Areas.Admin.ViewModels;
 using ButikBlog.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,40 @@ namespace ButikBlog.Areas.Admin.Controllers
             }
             ViewBag.CategoryId = new SelectList(db.Categories.ToList(), "Id", "CategoryName");
             return View();
+        }
+
+        public ActionResult New()
+        {
+
+            ViewBag.CategoryId = new SelectList(db.Categories.ToList(), "Id", "CategoryName");
+
+            return View("Edit", new PostEditViewModel()); 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult New(PostEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Post post = new Post
+                {
+                    Title = model.Title,
+                    Content = model.Content,
+                    CategoryId = model.CategoryId,
+                    AuthorId = User.Identity.GetUserId(),
+                    CreationTime = DateTime.Now
+                };
+                db.Posts.Add(post);
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.CategoryId = new SelectList(db.Categories.ToList(), "Id", "CategoryName");
+
+            return View("Edit", new PostEditViewModel());
         }
     }
 }
