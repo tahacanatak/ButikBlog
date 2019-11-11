@@ -14,7 +14,7 @@
     @Html.HiddenFor(x => x.Id)
 
     <div class="card card-primary card-outline">
-       
+
         <div class="card-body">
             <div class="row">
                 <div class="col-md-9">
@@ -33,7 +33,7 @@
             </div>
 
             <div class="form-group">
-                @Html.TextAreaFor(x => x.Content, new { @class = "form-control"})
+                @Html.TextAreaFor(x => x.Content, new { @class = "form-control" })
                 @Html.ValidationMessageFor(x => x.Content, null, new { @class = "text-danger" })
             </div>
         </div>
@@ -44,7 +44,7 @@
                 <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Kaydet</button>
             </div>
             <a href="@Url.Action("Index", "Posts")" class="btn btn-default"><i class="fas fa-times"></i> Vazgeç</a>
-            
+
         </div>
         <!-- /.card-footer -->
     </div>
@@ -57,8 +57,37 @@
             $("#Content").summernote({
                 lang: "tr-TR",
                 height: 300,
-                placeholder : "İçeriği giriniz.."
+                placeholder: "İçeriği giriniz..",
+               // https://stackoverflow.com/questions/21628222/summernote-image-upload
+                callbacks: {
+                    onImageUpload: function (files) {
+                        uploadFile(files[0]);                  
+                    }
+                }
             });
+
+            //https://stackoverflow.com/questions/19447435/ajax-upload-image
+            function uploadFile(file) {
+                var formData = new FormData();
+                formData.append("file", file);
+                
+                $.ajax({
+                    type: 'POST',
+                    url:"@Url.Action("AjaxImageUpload", "Posts")",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        $('#Content').summernote("insertImage", data.url);// url controllerdan geliyor.data nesneyi taşıyor   
+                        console.log(data);
+                    },
+                    error: function (data) {
+                        console.log("error");
+                        console.log(data);
+                    }
+                });
+            }
         });
     </script>
 }

@@ -3,7 +3,9 @@ using ButikBlog.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -94,6 +96,25 @@ namespace ButikBlog.Areas.Admin.Controllers
             ViewBag.CategoryId = new SelectList(db.Categories.ToList(), "Id", "CategoryName");
 
             return View("Edit", new PostEditViewModel());
+        }
+
+        [HttpPost]
+        public ActionResult AjaxImageUpload(HttpPostedFileBase file)
+        {
+            if (file == null || file.ContentLength == 0 || !file.ContentType.StartsWith("image/"))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var saveFolderPath = Server.MapPath("~/Upload/Posts"); // dosyanın fiziksel yolunu veriyor
+            var ext = Path.GetExtension(file.FileName); // dosya uzantısı alındı
+            var saveFileName = Guid.NewGuid() + ext; // benzersiz ad
+            var saveFilePath = Path.Combine(saveFolderPath, saveFileName); // tam dosya ismi
+
+            file.SaveAs(saveFilePath);
+
+            return Json(new { url = Url.Content("~/Upload/Posts/" + saveFileName) });
+
         }
     }
 }
