@@ -1,0 +1,139 @@
+﻿@model List<Category>
+@{
+    ViewBag.Title = "Kategoriler";
+    ViewBag.HeaderTitle = "Kategoriler";
+}
+
+@*@if (TempData["successMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["successMessage"]
+    </div>
+}*@
+
+<div class="card">
+    <div class="card-header">
+        <a href="@Url.Action("New", "Categories")" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus"></i>
+            Yeni Kategori
+        </a>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Kategori Adı</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr data-category-id="@item.Id">
+                        @*ajax ile yenilemek için*@
+
+                        <td>@item.Id</td>
+                        <td>@item.CategoryName</td>
+                        <td>
+                            <a href="#" class="btn btn-outline-danger" data-toggle="modal" data-target="#silModal" data-category-name="@item.CategoryName" data-category-id="@item.Id">
+                                <i class="fas fa-trash"></i>
+                                Sil
+                            </a>
+                            <a href="@Url.Action("Edit", "Categories", new { id = item.Id})" class="btn btn-outline-info"><i class="fas fa-edit"></i> Düzenle</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Kategori Adı</th>
+                    <th>İşlemler</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <!-- /.card-body -->
+    <!-- Sil Modal -->
+    <!-- data-post-id data-post-title kavramları -->
+
+    <div class="modal fade" id="silModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Silme Onayı <i class="fas fa-exclamation"></i> </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="modalCategoryId" />
+                    "<span id="modalCategoryName">Falanca</span>" isimli kategoriyi silmek istediğinize emin misiniz?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Vazgeç</button>
+                    <button type="button" class="btn btn-primary" id="modalButtonDelete">Sil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section scripts{
+    <script>
+        $(function () {
+
+                @if (TempData["successMessage"] != null)
+                {
+                    <text>toastr.success("@TempData["successMessage"]");</text>
+                }
+
+
+                    var table = $("#example1").DataTable({
+                    order: [[1, "asc"]],
+                            language: {
+                         url: "@Url.Content("~/Areas/Admin/plugins/datatables/Turkish.json")"
+                            }
+                     });
+
+
+                //sil modalı gözükürken tetiklenen event
+
+                $("#silModal").on("show.bs.modal", function (event) {
+                    var btnSil = $(event.relatedTarget);
+                    var modal = $(this);
+
+                    $("#modalCategoryId").val(btnSil.data("category-id"));
+                    $("#modalCategoryName").text(btnSil.data("category-name"));
+                });
+
+                $("#modalButtonDelete").click(function () {
+                    var id = $("#modalCategoryId").val();
+
+                    $.ajax({
+                        url: "@Url.Action("Delete", "Categories")",
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+                            if (result.success) {
+                                var tr = $("tr[data-category-id = " + id + "]");
+                                table.row(tr).remove().draw(false);
+                                $("#silModal").modal("hide");
+                            } else {
+                                alert(result.error);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Sunucu hatası");
+                        }
+
+                    });
+                });
+        });
+
+
+    </script>
+}

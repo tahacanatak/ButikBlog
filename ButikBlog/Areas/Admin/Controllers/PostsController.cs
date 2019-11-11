@@ -16,13 +16,19 @@ namespace ButikBlog.Areas.Admin.Controllers
         // GET: Admin/Posts
         public ActionResult Index()
         {
-            return View(db.Posts.ToList());
+            return View(db.Posts.OrderByDescending(x => x.CreationTime).ToList());
         }
         
         [HttpPost]
         public ActionResult Delete(int id)
-        {
+        {          
             var post = db.Posts.Find(id);
+
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+         
             db.Posts.Remove(post);
             db.SaveChanges();
 
