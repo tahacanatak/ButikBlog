@@ -1,4 +1,5 @@
-﻿using ButikBlog.Models;
+﻿using ButikBlog.Attributes;
+using ButikBlog.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,11 @@ using System.Web.Mvc;
 
 namespace ButikBlog.Areas.Admin.Controllers
 {
+    [Breadcrumb("Kategoriler")]
     public class CategoriesController : AdminBaseController
     {
         // GET: Admin/Categories
-       
+    [Breadcrumb("İndeks")]
         public ActionResult Index()
         {
             return View(db.Categories.OrderByDescending(x => x.CategoryName).ToList());
@@ -38,6 +40,7 @@ namespace ButikBlog.Areas.Admin.Controllers
             return Json(new { success = true });
         }
 
+        [Breadcrumb("Yeni")]
         public ActionResult New()
         {
             return View("Edit", new Category());
@@ -45,6 +48,7 @@ namespace ButikBlog.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Breadcrumb("Yeni")]
         public ActionResult New(Category model)
         {
             if (ModelState.IsValid)
@@ -58,7 +62,7 @@ namespace ButikBlog.Areas.Admin.Controllers
             return View("Edit", model);
         }
 
-
+        [Breadcrumb("Düzenle")]
         public ActionResult Edit(int id)
         {
             return View("Edit", db.Categories.Find(id));
@@ -66,6 +70,7 @@ namespace ButikBlog.Areas.Admin.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Breadcrumb("Düzenle")]
         public ActionResult Edit(Category model)
         {
             if (ModelState.IsValid)

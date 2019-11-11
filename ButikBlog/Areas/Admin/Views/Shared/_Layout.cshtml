@@ -264,10 +264,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <a href="@Url.Action("Index","Dashboard")">Yönetim Paneli</a>
                                 </li>
                                 <li class="breadcrumb-item">
-                                    <a href="@Url.Action("Index",Html.ControllerName())">@Html.ControllerName()</a>
+                                    <a href="@Url.Action("Index",Html.ControllerName())">
+                                    @Html.BreadcrumbControllerName()
+                                    </a>
                                 </li>
                                 <li class="breadcrumb-item active">
-                                    @Html.ActionName()
+                                    @Html.BreadcrumbActionName()
                                 </li>
                             </ol>
                         </div><!-- /.col -->
