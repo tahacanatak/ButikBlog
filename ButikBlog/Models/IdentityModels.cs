@@ -9,7 +9,6 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace ButikBlog.Models
 {
-    // Modeldeki Context sınıfı. ApplicationUser Kullanıcı sınıfına eşdeğer
 
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
@@ -26,6 +25,9 @@ namespace ButikBlog.Models
         public string Photo { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; } //her yazarın yazıları vardır
+        public virtual ICollection<Comment> Comments { get; set; } //her yazarın yazıları vardır
+
+
 
     }
 
@@ -52,6 +54,8 @@ namespace ButikBlog.Models
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Post> Posts { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
 
     }
 }
