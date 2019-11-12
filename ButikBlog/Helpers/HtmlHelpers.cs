@@ -58,5 +58,32 @@ namespace ButikBlog.Helpers
             return ba.Name;
         }
 
+        // Yazidaki hr tagını bulmak için
+        public static IHtmlString ShowPostIntro(this HtmlHelper htmlHelper, string content)
+        {
+            int position = content.IndexOf("<hr>");
+
+            if (position == -1)
+            {
+                return htmlHelper.Raw(content);
+            }
+
+
+            return htmlHelper.Raw(content.Substring(0,position));
+        }
+
+        public static IHtmlString ShowPost(this HtmlHelper htmlHelper, string content)
+        {
+            int position = content.IndexOf("<hr>");
+
+            if (position == -1)
+            {
+                return htmlHelper.Raw(content);
+            }
+
+
+            return htmlHelper.Raw(content.Remove(position, 4));
+        }
+
     }
 }

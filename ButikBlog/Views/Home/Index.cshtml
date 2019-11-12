@@ -12,10 +12,16 @@
 {
 
     <div class="blog-post">
-        <h2 class="blog-post-title">@item.Title</h2>
+        <h2 class="blog-post-title">
+            <a  href="@Url.Action("ShowPost", "Home", new { id = item.Id })" class="text-reset text-decoration-none">@item.Title</a>
+        </h2>
         <p class="blog-post-meta">@item.CreationTime by <a href="#">@item.Author.UserName</a></p>
 
-        @Html.Raw(item.Content)
+        @Html.ShowPostIntro(item.Content)
+
+        <p class="text-right">
+            <a href="@Url.Action("ShowPost", "Home", new { id = item.Id })">Devamını oku</a>
+        </p>
     </div>
 }
 
