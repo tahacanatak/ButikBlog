@@ -13,9 +13,14 @@
 
     <div class="blog-post">
         <h2 class="blog-post-title">
-            <a  href="@Url.Action("ShowPost", "Home", new { id = item.Id })" class="text-reset text-decoration-none">@item.Title</a>
+            <a href="@Url.Action("ShowPost", "Home", new { id = item.Id })" class="text-reset text-decoration-none">@item.Title</a>
         </h2>
-        <p class="blog-post-meta">@item.CreationTime by <a href="#">@item.Author.UserName</a></p>
+        <p class="blog-post-meta">
+            @item.CreationTime by <a href="#" class="text-secondary">@item.Author.UserName  </a> ||
+            <a href="@Url.Action("ShowPost", "Home", new { id = item.Id })#comments" class="text-secondary">
+                @item.Comments.Count Yorum
+            </a>
+        </p>
 
         @Html.ShowPostIntro(item.Content)
 
@@ -26,43 +31,43 @@
 }
 
 
-       
-    <nav class="blog-pagination">
 
-        @if (ViewBag.page < ViewBag.pageCount)
-        {
-            <a class="btn btn-outline-primary" href="@Url.Action("Index", "Home", new
+<nav class="blog-pagination">
+
+    @if (ViewBag.page < ViewBag.pageCount)
+    {
+        <a class="btn btn-outline-primary" href="@Url.Action("Index", "Home", new
                                         {
                                             cid = ViewBag.cid,
                                             page = ViewBag.nextPage
                                         })">
-                &laquo; Daha eski
-            </a>
-        }
-        else
-        {
-            <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">
-                &laquo; Daha eski
-            </a>
-        }
+            &laquo; Daha eski
+        </a>
+    }
+    else
+    {
+        <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">
+            &laquo; Daha eski
+        </a>
+    }
 
 
-        @if (ViewBag.page > 1)
-        {
-            <a class="btn btn-outline-primary" href="@Url.Action("Index", "Home", new
+    @if (ViewBag.page > 1)
+    {
+        <a class="btn btn-outline-primary" href="@Url.Action("Index", "Home", new
                                               {
                                                   cid = ViewBag.cid,
                                                   page = ViewBag.prevPage
                                               })">
-                Daha yeni &raquo;
-            </a>
-        }
-        else
-        {
-            <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">
-                Daha yeni &raquo;
-            </a>
-        }
+            Daha yeni &raquo;
+        </a>
+    }
+    else
+    {
+        <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">
+            Daha yeni &raquo;
+        </a>
+    }
 
-    </nav>
+</nav>
 

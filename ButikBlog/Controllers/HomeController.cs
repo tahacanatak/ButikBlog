@@ -1,4 +1,6 @@
 ﻿using ButikBlog.Models;
+using ButikBlog.ViewModels;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +72,31 @@ namespace ButikBlog.Controllers
                 return HttpNotFound();
             }
             return View(post);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult SendComment(SendCommentViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                Comment comment = new Comment
+                {
+                    ParentId = model.ParentId,
+                    PostId = model.PostId,
+                    AuthorId = User.Identity.GetUserId(),
+                    AuthorName = model.AuthorName,
+                    AuthorEmail = model.AuthorEmail,
+                    Content = model.Content,
+                    CreationTime = DateTime.Now                   
+                };
+
+                db.Comments.Add(comment);
+                db.SaveChanges();
+                return Json(comment);
+            }
+
+            var errorList = ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage).ToList();
+            return Json( new { Errors = errorList});
         }
     }
 }
