@@ -19,6 +19,14 @@ namespace ButikBlog.Migrations
 
         protected override void Seed(ButikBlog.Models.ApplicationDbContext context)
         {
+            #region Tum Kullanicilari IsEnable true yapildi
+            //foreach (var item in context.Users)
+            //{
+            //    item.IsEnabled = true;
+            //}
+            //return; 
+            #endregion
+
             #region Admin Rolünü ve Kullanýcýsýný oluþtur
 
             if (!context.Roles.Any(r => r.Name == "Admin"))

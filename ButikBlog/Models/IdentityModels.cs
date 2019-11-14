@@ -13,6 +13,11 @@ namespace ButikBlog.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            //varsayilan deger
+            IsEnabled = true;
+        }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -24,8 +29,12 @@ namespace ButikBlog.Models
         [StringLength(100)]
         public string Photo { get; set; }
 
+        //ilk başta bool? 
+        public bool IsEnabled { get; set; }
+
+
         public virtual ICollection<Post> Posts { get; set; } //her yazarın yazıları vardır
-        public virtual ICollection<Comment> Comments { get; set; } //her yazarın yazıları vardır
+        public virtual ICollection<Comment> Comments { get; set; } 
 
 
 

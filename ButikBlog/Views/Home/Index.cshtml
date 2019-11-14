@@ -16,17 +16,19 @@
             <a href="@Url.Action("ShowPost", "Home", new { id = item.Id })" class="text-reset text-decoration-none">@item.Title</a>
         </h2>
         <p class="blog-post-meta">
-            @item.CreationTime by <a href="#" class="text-secondary">@item.Author.UserName  </a> ||
-            <a href="@Url.Action("ShowPost", "Home", new { id = item.Id })#comments" class="text-secondary">
-                @item.Comments.Count Yorum
-            </a>
+            @item.CreationTime by <a href="#" class="text-secondary" style="text-decoration:none;">@item.Author.UserName  </a>
         </p>
 
         @Html.ShowPostIntro(item.Content)
 
-        <p class="text-right">
-            <a href="@Url.Action("ShowPost", "Home", new { id = item.Id })">Devamını oku</a>
-        </p>
+        <div class="d-flex small blog-post-meta-footer">
+            <a href="@Url.Action("ShowPost", "Home", new { id = item.Id })#comments" class="d-inline-block">
+                <i class="far fa-comments mr-1"></i>
+                @item.Comments.Count Yorum
+            </a>           
+                <a href="@Url.Action("ShowPost", "Home", new { id = item.Id })" class="ml-auto d-inline-block">Devamını oku</a>
+         
+        </div>
     </div>
 }
 

@@ -140,6 +140,14 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 100%;
 }
 
+.blog-post-meta-footer a {
+    color: #999;
+}
+
+.blog-post-meta-footer a:hover{
+    text-decoration:none;
+    color: slategray;
+}
 /*
  * Footer
  */

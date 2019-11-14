@@ -1,7 +1,66 @@
-﻿
+﻿@model DashboardIndexViewModel
 @{
     ViewBag.Title = "Anasayfa";
     ViewBag.HeaderTitle = "Yönetim Paneli";
 }
 
-<p>Buralar değerlenecek.</p>
+<!-- Small boxes (Stat box) -->
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>@Model.CategoryCount</h3>
+                <p>Kategori</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-folder-minus"></i>
+            </div>
+            <a href="@Url.Action("Index", "Categories")" class="small-box-footer">Detaylı bilgi <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>@Model.PostCount<sup style="font-size: 20px"></sup></h3>
+                <p>Yazı</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-file-signature"></i>
+            </div>
+            <a href="@Url.Action("Index", "Posts")" class="small-box-footer">Detaylı bilgi <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>@Model.UserCount</h3>
+                <p>Kullanıcı</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person"></i>
+            </div>
+            <a href="#" class="small-box-footer">Detaylı bilgi <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>@Model.CommentCount</h3>
+                <p>Yorum</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <a href="#" class="small-box-footer">Detaylı bilgi <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <!-- ./col -->
+</div>
+<!-- /.row -->
