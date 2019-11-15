@@ -96,7 +96,7 @@
 
     @@keyframes colorchange {
         0% {
-            background-color: cornsilk;
+            background-color: #ebdea9;
         }
 
         100% {
@@ -110,8 +110,11 @@
     <script>
          // yeni ana yorum yapıldıgında yoruma gitmesini saglayan fonksiyon
         $(function () { // döküman yenilendiğinde
-            if (location.hash && location.hash.startsWith('#comment-')) { // && yorum yazmadan linke gittiğinde animasyon calismasin 
+            if (location.hash && location.hash.startsWith("#comment-")) { // && yorum yazmadan linke gittiğinde animasyon calismasin 
                 var hash = location.hash;
+                location.hash = "";
+                location.hash = hash;
+
 
                 if ($(hash).length) {
                     $(hash).addClass("comment-highlight");
@@ -158,7 +161,7 @@
                     else {
                         sessionStorage.successMessage = "Yorumunuz başarıyla eklendi"; // toastr için
                         window.location.hash = "#comment-" + result.Id;
-                        location.reload(true);
+                        location.reload();
                     }
                 }
             });

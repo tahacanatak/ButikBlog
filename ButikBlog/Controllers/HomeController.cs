@@ -13,7 +13,7 @@ namespace ButikBlog.Controllers
     {
 
 
-        public ActionResult Index(int? cid, int page = 1)
+        public ActionResult Index(int? cid, string slug , int page = 1)
         {
             int pageSize = 5;
 
@@ -29,6 +29,12 @@ namespace ButikBlog.Controllers
                 {
                     return HttpNotFound();
                 }
+                if (cat.Slug != slug)
+                {
+                    return RedirectToRoute("CategoryRoute", new { cid = cid, slug = cat.Slug, page = page});
+                }
+
+
                 result = result.Where(x => x.CategoryId == cid);
                 ViewBag.SubTitle = cat.CategoryName;
             }
@@ -64,13 +70,19 @@ namespace ButikBlog.Controllers
             return PartialView("_CategoriesPartial", db.Categories.ToList());
         }
 
-        public ActionResult ShowPost(int id)
+        public ActionResult ShowPost(int id, string slug)
         {
             Post post = db.Posts.Find(id);
             if (post == null)
             {
                 return HttpNotFound();
+            }// eger adresteki slug veritabaninkiyle aynı değilse dogrusuna yönlendir
+            if (post.Slug != slug)
+            {
+                return RedirectToRoute("PostRoute", new { id = id, slug = post.Slug });
             }
+
+
             return View(post);
         }
 

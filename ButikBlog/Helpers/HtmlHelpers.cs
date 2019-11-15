@@ -1,4 +1,6 @@
 ﻿using ButikBlog.Attributes;
+using ButikBlog.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +31,10 @@ namespace ButikBlog.Helpers
             Type t = Type.GetType("ButikBlog.Areas.Admin.Controllers." + controller + "Controller");
 
             //todo: diziye gerek olmayabilir GetCustomAttribute dene
-            object[] attributes = t.GetCustomAttributes(typeof(BreadcrumbAttribute),true);
+            object[] attributes = t.GetCustomAttributes(typeof(BreadcrumbAttribute), true);
 
             //eger controllerın ustune attributes koymadıysa
-            if (attributes.Length == 0) 
+            if (attributes.Length == 0)
             {
                 return controller;
             }
@@ -54,13 +56,18 @@ namespace ButikBlog.Helpers
 
             if (ba == null)
                 return action;
-            
+
             return ba.Name;
         }
 
         // Yazidaki hr tagını bulmak için
         public static IHtmlString ShowPostIntro(this HtmlHelper htmlHelper, string content)
         {
+
+            if (string.IsNullOrEmpty(content))
+            {
+                return htmlHelper.Raw("");
+            }
             int position = content.IndexOf("<hr>");
 
             if (position == -1)
@@ -69,11 +76,16 @@ namespace ButikBlog.Helpers
             }
 
 
-            return htmlHelper.Raw(content.Substring(0,position));
+            return htmlHelper.Raw(content.Substring(0, position));
         }
 
         public static IHtmlString ShowPost(this HtmlHelper htmlHelper, string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                return htmlHelper.Raw("");
+            }
+
             int position = content.IndexOf("<hr>");
 
             if (position == -1)
@@ -83,6 +95,33 @@ namespace ButikBlog.Helpers
 
 
             return htmlHelper.Raw(content.Remove(position, 4));
+        }
+
+        public static string ProfilePhotoPath(this HtmlHelper htmlHelper)
+        {
+            string userId = htmlHelper.ViewContext.HttpContext.User.Identity.GetUserId();
+
+            UrlHelper urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext, htmlHelper.RouteCollection);
+
+            // giriş yapan kullanıcı varsa
+            if (userId != null)
+            {
+
+                using (var db = new ApplicationDbContext())
+                {
+                    var user = db.Users.Find(userId);
+                    
+                    // fotografı varsa
+                    if (user != null && !string.IsNullOrEmpty(user.Photo))
+                    {
+                        return urlHelper.Content("~/Upload/Profiles/" + user.Photo);
+                    }
+                }
+            }
+            return urlHelper.Content("~/Images/avatar.png");
+
+
+
         }
 
     }

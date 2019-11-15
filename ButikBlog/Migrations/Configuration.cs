@@ -1,6 +1,7 @@
 namespace ButikBlog.Migrations
 {
     using ButikBlog.Models;
+    using ButikBlog.Utility;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using System;
@@ -19,6 +20,31 @@ namespace ButikBlog.Migrations
 
         protected override void Seed(ButikBlog.Models.ApplicationDbContext context)
         {
+            //isi bittigi icin false a donduruldu
+            var autoGeneratoreSlugs = false;
+
+            #region Mevcut Kategori ve Yazilarin sluglarýný olustur
+
+            if (autoGeneratoreSlugs)
+            {
+                foreach (var item in context.Categories)
+                {
+                    if (string.IsNullOrEmpty(item.Slug))
+                    {
+                        item.Slug = UrlService.URLFriendly(item.CategoryName);
+                    }
+                }
+
+                foreach ( var item in context.Posts)
+                {
+                    if (string.IsNullOrEmpty(item.Slug))
+                    {
+                        item.Slug = UrlService.URLFriendly(item.Title);
+                    }
+                }
+            }
+            #endregion
+
             #region Tum Kullanicilari IsEnable true yapildi
             //foreach (var item in context.Users)
             //{

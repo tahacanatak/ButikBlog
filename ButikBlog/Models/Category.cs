@@ -15,6 +15,10 @@ namespace ButikBlog.Models
         [Display(Name = "Kategori Adı")]
         public string CategoryName { get; set; }
 
+        [StringLength(50)]
+        [Display(Name = "SEO Url")]
+        public string Slug { get; set; }
+
         public virtual ICollection<Post> Posts { get; set; }
 
     }

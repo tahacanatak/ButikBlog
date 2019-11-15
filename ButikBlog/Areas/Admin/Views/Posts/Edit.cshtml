@@ -2,10 +2,8 @@
 @{
     var isNew = Model.Id == 0;
 
-
     ViewBag.Title = isNew ? "Yeni Yazı" : "Yazıyı Düzenle";
     ViewBag.HeaderTitle = isNew ? "Yeni Yazı" : "Yazıyı Düzenle";
-
 }
 
 @using (Html.BeginForm(isNew ? "New" : "Edit", "Posts", FormMethod.Post))
@@ -14,28 +12,39 @@
     @Html.HiddenFor(x => x.Id)
 
     <div class="card card-primary card-outline">
-
+        @*<div class="card-header">
+                <h3 class="card-title">Compose New Message</h3>
+            </div>*@
+        <!-- /.card-header -->
         <div class="card-body">
             <div class="row">
                 <div class="col-md-9">
                     <div class="form-group">
-                        @Html.TextBoxFor(x => x.Title, new { @class = "form-control", placeholder = "Başlık" })
+                        @Html.TextBoxFor(x => x.Title,
+                             new { @class = "form-control", placeholder = "Başlık" })
                         @Html.ValidationMessageFor(x => x.Title, null, new { @class = "text-danger" })
-
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        @Html.DropDownListFor(x => x.CategoryId, null, "Kategori seçiniz", new { @class = "form-control" })
+                        @Html.DropDownListFor(x => x.CategoryId, null, "Kategori seçiniz",
+                             new { @class = "form-control" })
                         @Html.ValidationMessageFor(x => x.CategoryId, null, new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
-
             <div class="form-group">
-                @Html.TextAreaFor(x => x.Content, new { @class = "form-control" })
+                @Html.TextAreaFor(x => x.Content,
+                             new { @class = "form-control" })
                 @Html.ValidationMessageFor(x => x.Content, null, new { @class = "text-danger" })
             </div>
+            <div class="form-inline">
+                @Html.LabelFor(x => x.Slug)
+                @Html.TextBoxFor(x => x.Slug, new { @class = "form-control ml-2 col-6" })
+                @Html.ValidationMessageFor(x => x.Slug, null, new { @class = "text-danger" })
+                <a href="#" id="btnRegenerateSlug" class="ml-2"><i class="fas fa-sync"></i></a>
+            </div>
+
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
@@ -43,18 +52,47 @@
                 <button type="button" class="btn btn-default"><i class="fas fa-pencil-alt"></i> Taslak</button>
                 <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Kaydet</button>
             </div>
-            <a href="@Url.Action("Index", "Posts")" class="btn btn-default"><i class="fas fa-times"></i> Vazgeç</a>
-
+            <a href="@Url.Action("Index","Posts")" class="btn btn-default">
+                <i class="fas fa-times"></i> Vazgeç
+            </a>
         </div>
         <!-- /.card-footer -->
     </div>
-
+    <!-- /.card -->
 }
 
-@section  scripts {
+@section scripts{
     <script>
+
         $(function () {
-            $("#Content").summernote({
+            function GenerateSlug() {
+                $.ajax({
+                        type: "post",
+                        url: "@Url.Action("GenerateSlug","Posts")",
+                        data: { Title: $("#Title").val().trim()},
+                        success: function (result) {
+                            $("#Slug").val(result);
+                        }
+                    });
+            }
+
+            $("#btnRegenerateSlug").click(function (event) {
+                event.preventDefault();
+                if ($("#Title").val().trim()) {
+                    GenerateSlug();
+                }
+            });
+
+            $("#Title").on("blur", function () {
+                if ($(this).val().trim() && !$("#Slug").val().trim()) {
+                    GenerateSlug();
+                }
+            });
+
+
+
+            //Add text editor
+            $('#Content').summernote({
                 toolbar: [
                     ['style', ['style']],
                     ['font', ['bold', 'underline', 'clear']],
@@ -65,10 +103,16 @@
                     ['insert', ['link', 'picture', 'video', 'hr']],
                     ['view', ['fullscreen', 'codeview', 'help']],
                 ],
+
+                //https://summernote.org/deep-dive/
+
                 lang: "tr-TR",
                 height: 300,
-                placeholder: "İçeriği giriniz..",
-               // https://stackoverflow.com/questions/21628222/summernote-image-upload
+                placeholder: "Bir şeyler yazınız..",
+
+
+                // https://stackoverflow.com/questions/21628222/summernote-image-upload
+
                 callbacks: {
                     onImageUpload: function (files) {
                         uploadFile(files[0]);
@@ -78,18 +122,20 @@
 
             //https://stackoverflow.com/questions/19447435/ajax-upload-image
             function uploadFile(file) {
+
                 var formData = new FormData();
                 formData.append("file", file);
 
                 $.ajax({
                     type: 'POST',
-                    url:"@Url.Action("AjaxImageUpload", "Posts")",
+                    url: "@Url.Action("AjaxImageUpload","Posts")",
                     data: formData,
                     cache: false,
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        $('#Content').summernote("insertImage", data.url);// url controllerdan geliyor.data nesneyi taşıyor
+                        $("#Content").summernote("insertImage", data.url);
+
                         console.log(data);
                     },
                     error: function (data) {
@@ -98,6 +144,8 @@
                     }
                 });
             }
+
         });
+
     </script>
 }

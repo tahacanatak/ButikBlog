@@ -12,15 +12,9 @@
 
     @*viewmodeline photo alanı ekledik*@
     <div class="mb-1">
-        @if (string.IsNullOrEmpty(Model.Photo))
-        {
-            <img src="~/Images/avatar.png" class="img-thumbnail" style="height:150px;" />
-        }
-        else
-        {
-            <img src="~/Upload/Profiles/@Model.Photo" height="150" class="img-thumbnail" style="height:150px;" />
 
-        }
+        <img src="@Html.ProfilePhotoPath()" class="img-thumbnail" style="height:150px;" />
+
         <br />
         <a href="@Url.Action("UploadAvatar", "Manage")">Resmi Güncelle</a>
     </div>
