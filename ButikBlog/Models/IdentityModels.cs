@@ -57,7 +57,15 @@ namespace ButikBlog.Models
             base.OnModelCreating(modelBuilder);
 
             // bire çoklu ilişkilerde baglantılı tabloların silinmesini engelliyor <...> isimli metodu kaldırdık
-            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>(); // one to manyler kapatıldı
+
+            //Her yorumun zorunlu olarak bir yazısı vardır ve
+            //o yazınında yorumları vardır
+            //yazı silindiğinde yorumlarını da otomatik sil
+            modelBuilder.Entity<Comment>()
+                .HasRequired(x => x.Post)
+                .WithMany(x => x.Comments)
+                .WillCascadeOnDelete();
         }
 
         public DbSet<Category> Categories { get; set; }
